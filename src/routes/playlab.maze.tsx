@@ -62,7 +62,7 @@ function Maze() {
 
   function moveBy(dr: number, dc: number) {
     if (mode !== "play") return;
-    const [r, c] = pos; const nr = r + dr, nc = c + dc;
+    const r = pos[0], c = pos[1]; const nr = r + dr, nc = c + dc;
     if (nr < 0 || nc < 0 || nr >= n || nc >= n || grid[nr][nc] === 1) return;
     setPos([nr, nc]);
     if (nr === end[0] && nc === end[1]) {
@@ -74,7 +74,7 @@ function Maze() {
   useEffect(() => {
     const h = (e: KeyboardEvent) => {
       const m: Record<string, [number, number]> = { ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1] };
-      if (m[e.key] && mode === "play") { e.preventDefault(); moveBy(...m[e.key]); }
+      if (m[e.key] && mode === "play") { e.preventDefault(); moveBy(m[e.key][0], m[e.key][1]); }
     };
     window.addEventListener("keydown", h); return () => window.removeEventListener("keydown", h);
   });
