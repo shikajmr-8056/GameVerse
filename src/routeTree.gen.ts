@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as PlaylabIndexRouteImport } from './routes/playlab.index'
 import { Route as PlaylabLudoRouteImport } from './routes/playlab.ludo'
+import { Route as PlaylabMazeRouteImport } from './routes/playlab.maze'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,17 +35,24 @@ const PlaylabLudoRoute = PlaylabLudoRouteImport.update({
   path: '/playlab/ludo',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PlaylabMazeRoute = PlaylabMazeRouteImport.update({
+  id: '/playlab/maze',
+  path: '/playlab/maze',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/projects': typeof ProjectsRoute
   '/playlab/ludo': typeof PlaylabLudoRoute
+  '/playlab/maze': typeof PlaylabMazeRoute
   '/playlab/': typeof PlaylabIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/projects': typeof ProjectsRoute
   '/playlab/ludo': typeof PlaylabLudoRoute
+  '/playlab/maze': typeof PlaylabMazeRoute
   '/playlab': typeof PlaylabIndexRoute
 }
 export interface FileRoutesById {
@@ -52,20 +60,28 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/projects': typeof ProjectsRoute
   '/playlab/ludo': typeof PlaylabLudoRoute
+  '/playlab/maze': typeof PlaylabMazeRoute
   '/playlab/': typeof PlaylabIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/projects' | '/playlab/ludo' | '/playlab/'
+  fullPaths: '/' | '/projects' | '/playlab/ludo' | '/playlab/maze' | '/playlab/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/projects' | '/playlab/ludo' | '/playlab'
-  id: '__root__' | '/' | '/projects' | '/playlab/ludo' | '/playlab/'
+  to: '/' | '/projects' | '/playlab/ludo' | '/playlab/maze' | '/playlab'
+  id:
+    | '__root__'
+    | '/'
+    | '/projects'
+    | '/playlab/ludo'
+    | '/playlab/maze'
+    | '/playlab/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ProjectsRoute: typeof ProjectsRoute
   PlaylabLudoRoute: typeof PlaylabLudoRoute
+  PlaylabMazeRoute: typeof PlaylabMazeRoute
   PlaylabIndexRoute: typeof PlaylabIndexRoute
 }
 
@@ -99,6 +115,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlaylabLudoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/playlab/maze': {
+      id: '/playlab/maze'
+      path: '/playlab/maze'
+      fullPath: '/playlab/maze'
+      preLoaderRoute: typeof PlaylabMazeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -106,6 +129,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ProjectsRoute: ProjectsRoute,
   PlaylabLudoRoute: PlaylabLudoRoute,
+  PlaylabMazeRoute: PlaylabMazeRoute,
   PlaylabIndexRoute: PlaylabIndexRoute,
 }
 export const routeTree = rootRouteImport
