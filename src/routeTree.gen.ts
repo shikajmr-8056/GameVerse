@@ -10,14 +10,28 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CircuitverseRouteImport } from './routes/circuitverse'
+import { Route as CodeverseRouteImport } from './routes/codeverse'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as PlaylabIndexRouteImport } from './routes/playlab.index'
+import { Route as PlaylabBharatRouteImport } from './routes/playlab.bharat'
+import { Route as PlaylabCarromRouteImport } from './routes/playlab.carrom'
 import { Route as PlaylabLudoRouteImport } from './routes/playlab.ludo'
 import { Route as PlaylabMazeRouteImport } from './routes/playlab.maze'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CircuitverseRoute = CircuitverseRouteImport.update({
+  id: '/circuitverse',
+  path: '/circuitverse',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CodeverseRoute = CodeverseRouteImport.update({
+  id: '/codeverse',
+  path: '/codeverse',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProjectsRoute = ProjectsRouteImport.update({
@@ -28,6 +42,16 @@ const ProjectsRoute = ProjectsRouteImport.update({
 const PlaylabIndexRoute = PlaylabIndexRouteImport.update({
   id: '/playlab/',
   path: '/playlab/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlaylabBharatRoute = PlaylabBharatRouteImport.update({
+  id: '/playlab/bharat',
+  path: '/playlab/bharat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlaylabCarromRoute = PlaylabCarromRouteImport.update({
+  id: '/playlab/carrom',
+  path: '/playlab/carrom',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlaylabLudoRoute = PlaylabLudoRouteImport.update({
@@ -43,14 +67,22 @@ const PlaylabMazeRoute = PlaylabMazeRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/circuitverse': typeof CircuitverseRoute
+  '/codeverse': typeof CodeverseRoute
   '/projects': typeof ProjectsRoute
+  '/playlab/bharat': typeof PlaylabBharatRoute
+  '/playlab/carrom': typeof PlaylabCarromRoute
   '/playlab/ludo': typeof PlaylabLudoRoute
   '/playlab/maze': typeof PlaylabMazeRoute
   '/playlab/': typeof PlaylabIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/circuitverse': typeof CircuitverseRoute
+  '/codeverse': typeof CodeverseRoute
   '/projects': typeof ProjectsRoute
+  '/playlab/bharat': typeof PlaylabBharatRoute
+  '/playlab/carrom': typeof PlaylabCarromRoute
   '/playlab/ludo': typeof PlaylabLudoRoute
   '/playlab/maze': typeof PlaylabMazeRoute
   '/playlab': typeof PlaylabIndexRoute
@@ -58,20 +90,46 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/circuitverse': typeof CircuitverseRoute
+  '/codeverse': typeof CodeverseRoute
   '/projects': typeof ProjectsRoute
+  '/playlab/bharat': typeof PlaylabBharatRoute
+  '/playlab/carrom': typeof PlaylabCarromRoute
   '/playlab/ludo': typeof PlaylabLudoRoute
   '/playlab/maze': typeof PlaylabMazeRoute
   '/playlab/': typeof PlaylabIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/projects' | '/playlab/ludo' | '/playlab/maze' | '/playlab/'
+  fullPaths:
+    | '/'
+    | '/circuitverse'
+    | '/codeverse'
+    | '/projects'
+    | '/playlab/bharat'
+    | '/playlab/carrom'
+    | '/playlab/ludo'
+    | '/playlab/maze'
+    | '/playlab/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/projects' | '/playlab/ludo' | '/playlab/maze' | '/playlab'
+  to:
+    | '/'
+    | '/circuitverse'
+    | '/codeverse'
+    | '/projects'
+    | '/playlab/bharat'
+    | '/playlab/carrom'
+    | '/playlab/ludo'
+    | '/playlab/maze'
+    | '/playlab'
   id:
     | '__root__'
     | '/'
+    | '/circuitverse'
+    | '/codeverse'
     | '/projects'
+    | '/playlab/bharat'
+    | '/playlab/carrom'
     | '/playlab/ludo'
     | '/playlab/maze'
     | '/playlab/'
@@ -79,7 +137,11 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CircuitverseRoute: typeof CircuitverseRoute
+  CodeverseRoute: typeof CodeverseRoute
   ProjectsRoute: typeof ProjectsRoute
+  PlaylabBharatRoute: typeof PlaylabBharatRoute
+  PlaylabCarromRoute: typeof PlaylabCarromRoute
   PlaylabLudoRoute: typeof PlaylabLudoRoute
   PlaylabMazeRoute: typeof PlaylabMazeRoute
   PlaylabIndexRoute: typeof PlaylabIndexRoute
@@ -94,6 +156,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/circuitverse': {
+      id: '/circuitverse'
+      path: '/circuitverse'
+      fullPath: '/circuitverse'
+      preLoaderRoute: typeof CircuitverseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/codeverse': {
+      id: '/codeverse'
+      path: '/codeverse'
+      fullPath: '/codeverse'
+      preLoaderRoute: typeof CodeverseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/projects': {
       id: '/projects'
       path: '/projects'
@@ -106,6 +182,20 @@ declare module '@tanstack/react-router' {
       path: '/playlab'
       fullPath: '/playlab/'
       preLoaderRoute: typeof PlaylabIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/playlab/bharat': {
+      id: '/playlab/bharat'
+      path: '/playlab/bharat'
+      fullPath: '/playlab/bharat'
+      preLoaderRoute: typeof PlaylabBharatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/playlab/carrom': {
+      id: '/playlab/carrom'
+      path: '/playlab/carrom'
+      fullPath: '/playlab/carrom'
+      preLoaderRoute: typeof PlaylabCarromRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/playlab/ludo': {
@@ -127,7 +217,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CircuitverseRoute: CircuitverseRoute,
+  CodeverseRoute: CodeverseRoute,
   ProjectsRoute: ProjectsRoute,
+  PlaylabBharatRoute: PlaylabBharatRoute,
+  PlaylabCarromRoute: PlaylabCarromRoute,
   PlaylabLudoRoute: PlaylabLudoRoute,
   PlaylabMazeRoute: PlaylabMazeRoute,
   PlaylabIndexRoute: PlaylabIndexRoute,
