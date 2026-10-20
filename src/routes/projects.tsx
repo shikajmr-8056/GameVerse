@@ -1,18 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { PageHeader } from "@/components/AppShell";
-
-export const Route = createFileRoute("/projects")({
-  head: () => ({
-    meta: [
-      { title: "Projects — VidyaVerse" },
-      { name: "description", content: "Your VidyaVerse projects." },
-      { property: "og:title", content: "Projects — VidyaVerse" },
-      { property: "og:description", content: "Your VidyaVerse projects." },
-    ],
-  }),
-  component: () => (
-    <main>
-      <PageHeader title="Projects" sub="Projects stay in the main VidyaVerse app. This page keeps its place in the menu unchanged." />
-    </main>
-  ),
-});
+import { createFileRoute,useNavigate } from '@tanstack/react-router';
+import { useEffect,useState } from 'react';
+import { FolderKanban,Trash2,Download,Code2,Cpu } from 'lucide-react';
+import { PageHeader } from '@/components/AppShell';
+import { Button } from '@/components/ui/button';
+import { supabase } from '@/integrations/supabase/client';
+import type { Tables } from '@/integrations/supabase/types';
+import { toast } from 'sonner';
+export const Route=createFileRoute('/projects')({head:()=>({meta:[{title:'My Projects — VidyaVerse'},{name:'description',content:'Save, open and export your coding and circuit projects.'},{property:'og:title',content:'My Projects — VidyaVerse'},{property:'og:description',content:'Your personal collection of circuits and code.'},{property:'og:type',content:'website'},{name:'twitter:card',content:'summary_large_image'}]}),component:Projects});
+function Projects(){const [rows,setRows]=useState<Tables<'projects'>[]>([]),[state,setState]=useState('Loading…');const navigate=useNavigate();async function load(){const {data:{user}}=await supabase.auth.getUser();if(!user){setRows([]);setState('Sign in from the menu to view your projects.');return;}const {data,error}=await supabase.from('projects').select('*').order('updated_at',{ascending:false});if(error){setState('Projects could not load.');return;}setRows(data??[]);setState('');}useEffect(()=>{load();const {data:{subscription}}=supabase.auth.onAuthStateChange(event=>{if(event==='SIGNED_IN'||event==='SIGNED_OUT')setTimeout(load,0);});return()=>subscription.unsubscribe();},[]);async function remove(id:string){if(!confirm('Delete this project?'))return;const {error}=await supabase.from('projects').delete().eq('id',id);if(error)toast.error('Could not delete project');else setRows(r=>r.filter(x=>x.id!==id));}function download(row:Tables<'projects'>){const url=URL.createObjectURL(new Blob([JSON.stringify(row.content,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=`${row.title}.json`;a.click();URL.revokeObjectURL(url);}
+return <main className="pb-10"><PageHeader title="My Projects" sub={`${rows.length} saved projects`}/><div className="px-4 md:px-8">{state?<p role="status" className="py-8 text-muted-foreground">{state}</p>:rows.length===0?<div className="py-12 text-center"><FolderKanban className="mx-auto h-12 w-12 text-circuit"/><h2 className="mt-4 text-xl font-bold">Your collection starts here</h2><p className="mt-2 text-muted-foreground">No saved projects yet.</p><div className="mt-5 flex justify-center gap-3"><Button onClick={()=>navigate({to:'/circuitverse'})}><Cpu/>Build a circuit</Button><Button variant="outline" onClick={()=>navigate({to:'/codeverse'})}><Code2/>Write code</Button></div></div>:<div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">{rows.map(row=><article key={row.id} className="card-surface p-5"><div className="mb-5 flex items-center justify-between">{row.kind==='circuit'?<Cpu className="h-8 w-8 text-circuit"/>:<Code2 className="h-8 w-8 text-code"/>}<span className="text-xs capitalize text-muted-foreground">{row.kind}</span></div><h2 className="break-words text-xl font-bold">{row.title}</h2><p className="mt-2 text-xs text-muted-foreground">{new Date(row.updated_at).toLocaleDateString()}</p><div className="mt-5 flex gap-2"><Button onClick={()=>{sessionStorage.setItem(`open-${row.kind}`,JSON.stringify(row.content));navigate({to:row.kind==='circuit'?'/circuitverse':'/codeverse'});}}>Open</Button><Button variant="outline" size="icon" title="Export project" onClick={()=>download(row)}><Download/></Button><Button variant="ghost" size="icon" title="Delete project" onClick={()=>remove(row.id)}><Trash2/></Button></div></article>)}</div>}</div></main>;}
