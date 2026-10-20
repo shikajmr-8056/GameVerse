@@ -1,18 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { PageHeader } from "@/components/AppShell";
-
-export const Route = createFileRoute("/playlab/bharat")({
-  head: () => ({
-    meta: [
-      { title: "Bharat Explorer — VidyaVerse" },
-      { name: "description", content: "Bharat Explorer: the India exploration game for Classes 5–12." },
-      { property: "og:title", content: "Bharat Explorer — VidyaVerse" },
-      { property: "og:description", content: "Bharat Explorer: the India exploration game." },
-    ],
-  }),
-  component: () => (
-    <main>
-      <PageHeader title="Bharat Explorer" sub="Coming soon — the India exploration game is still being built." />
-    </main>
-  ),
-});
+import { createFileRoute } from '@tanstack/react-router';
+import { useState } from 'react';
+import { Check,Compass,Trophy } from 'lucide-react';
+import { PageHeader } from '@/components/AppShell';
+import { Button } from '@/components/ui/button';
+import { REGIONS } from '@/lib/missions';
+import { useProgress,update,addXp } from '@/lib/progress';
+import bharat from '@/assets/bharat.jpg';
+export const Route=createFileRoute('/playlab/bharat')({head:()=>({meta:[{title:'Bharat Explorer — Discover India in VidyaVerse'},{name:'description',content:'Explore six Indian regions through geography, culture, stories and missions.'},{property:'og:title',content:'Bharat Explorer — Discover India'},{property:'og:description',content:'Journey through India and earn regional badges.'},{property:'og:type',content:'website'},{name:'twitter:card',content:'summary_large_image'}]}),component:Bharat});
+function Bharat(){const p=useProgress();const [id,setId]=useState('north'),[step,setStep]=useState(-1),[choice,setChoice]=useState<number|null>(null),[score,setScore]=useState(0);const region=REGIONS.find(r=>r.id===id)??REGIONS[0];const question=region.questions[step];const done=p.bharat.done.includes(id);function next(){const total=score+(choice===question?.answer?1:0);setScore(total);setChoice(null);if(step===2){setStep(3);if(total===3&&!done){update(p=>({...p,bharat:{done:[...p.bharat.done,id]}}));addXp(30,`${region.name} Explorer`);}}else setStep(step+1);}
+return <main className="pb-10"><PageHeader title="Bharat Explorer" back="/playlab" sub={`${p.bharat.done.length} of 6 regions explored`} right={<span className="flex items-center gap-2 text-sm font-semibold text-success"><Trophy/>{p.bharat.done.length*30} mission XP</span>}/><div className="grid gap-6 px-4 md:px-8 xl:grid-cols-[1.1fr_1fr]"><div><div className="relative overflow-hidden rounded-lg bg-map"><img src={bharat} className="aspect-[3/2] w-full object-cover" alt="Illustrated journey across India's landmarks"/ ><div className="absolute inset-x-0 bottom-0 bg-card/95 px-4 py-3"><p className="font-display text-xl font-bold">A journey through India</p><p className="text-sm text-muted-foreground">Mountains, rivers, communities and living history</p></div></div><div className="mt-4 grid gap-2 sm:grid-cols-2">{REGIONS.map(r=><Button key={r.id} variant={id===r.id?'default':'outline'} className="h-auto justify-start whitespace-normal py-3 text-left" onClick={()=>{setId(r.id);setStep(-1);setChoice(null);setScore(0);}}>{p.bharat.done.includes(r.id)?<Check/>:<Compass/>}<span><span className="block font-bold">{r.name}</span><span className="block text-xs opacity-80">{r.place}</span></span></Button>)}</div></div><section className="min-w-0"><p className="text-sm font-semibold text-circuit">REGIONAL MISSION</p><h2 className="mt-2 text-3xl font-bold">{region.name}</h2><p className="mt-1 text-muted-foreground">{region.place}</p>{step===-1?<><p className="mt-6 text-lg leading-relaxed">{region.story}</p><div className="mt-6 flex items-center gap-3"><Button onClick={()=>setStep(0)}>{done?'Replay mission':'Start mission'}</Button>{done&&<span className="flex items-center gap-1 text-sm text-success"><Check/>Badge earned</span>}</div></>:question?<div className="mt-6"><p className="text-sm text-muted-foreground">Question {step+1} / 3</p><h3 className="mt-3 text-xl font-bold">{question.q}</h3><div className="mt-5 space-y-3">{question.options.map((option,i)=><Button key={option} variant="outline" className={`h-auto w-full justify-start whitespace-normal py-4 ${choice===i?'border-primary bg-accent':''}`} disabled={choice!==null} onClick={()=>setChoice(i)}>{String.fromCharCode(65+i)}. {option}</Button>)}</div>{choice!==null&&<div className="mt-5" role="status"><p className={choice===question.answer?'text-success':'text-destructive'}>{choice===question.answer?'Correct!':`The answer is ${question.options[question.answer]}.`}</p><Button className="mt-3" onClick={next}>{step===2?'Finish mission':'Next question'}</Button></div>}</div>:<div className="mt-8 border-t pt-6"><Trophy className="h-12 w-12 text-primary"/><h3 className="mt-4 text-2xl font-bold">{score===3?'Region explored!':'Keep exploring'}</h3><p className="mt-2 text-muted-foreground">{score} / 3 correct{score===3?' · Regional badge earned':' · Read the story and try again'}</p><Button className="mt-5" onClick={()=>{setStep(-1);setScore(0);}}>Back to story</Button></div>}</section></div></main>;
+}
